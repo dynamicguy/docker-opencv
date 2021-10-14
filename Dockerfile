@@ -4,8 +4,7 @@ LABEL "com.dynamicguy.vendor"="Dynamic Guy"
 LABEL version="1.0.0"
 LABEL description="Latest and greatest \
 opencv and opencv_contrib built in one container."
-
-
+ARG APP_HOME=/app
 RUN apt-get update \
     && apt-get install -y \
         build-essential \
@@ -27,20 +26,18 @@ RUN apt-get update \
         python3-pil \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install numpy
-
-WORKDIR /
+WORKDIR ${APP_HOME}
 ENV OPENCV_VERSION="4.5.3"
 RUN wget https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip \
 && unzip ${OPENCV_VERSION}.zip \
 && rm ${OPENCV_VERSION}.zip
 RUN wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
 && unzip ${OPENCV_VERSION}.zip \
-&& mkdir /opencv-${OPENCV_VERSION}/cmake_binary \
-&& cd /opencv-${OPENCV_VERSION}/cmake_binary \
+&& mkdir ${APP_HOME}/opencv-${OPENCV_VERSION}/cmake_binary \
+&& cd ${APP_HOME}/opencv-${OPENCV_VERSION}/cmake_binary \
 && cmake -D BUILD_TIFF=ON \
   -D CMAKE_INSTALL_PREFIX=/usr/local \
-  -D OPENCV_EXTRA_MODULES_PATH=/opencv_contrib-${OPENCV_VERSION}/modules \
+  -D OPENCV_EXTRA_MODULES_PATH=${APP_HOME}/opencv_contrib-${OPENCV_VERSION}/modules \
   -D WITH_CUDA=OFF \
   -D WITH_OPENGL=ON \
   -D WITH_OPENCL=ON \
@@ -68,5 +65,5 @@ RUN wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
   -D PYTHON_PACKAGES_PATH=$(python3.9 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
   .. \
 && make install \
-&& rm /${OPENCV_VERSION}.zip \
-&& rm -r /opencv-${OPENCV_VERSION}
+&& rm ${APP_HOME}/${OPENCV_VERSION}.zip \
+&& rm -r ${APP_HOME}/opencv-${OPENCV_VERSION}
