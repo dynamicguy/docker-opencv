@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM python:3.9-slim
+FROM python:3.8-slim-bullseye
 LABEL "com.dynamicguy.vendor"="Dynamic Guy"
 LABEL version="1.0.0"
 LABEL description="Latest and greatest \
