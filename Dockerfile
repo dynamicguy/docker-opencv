@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM python:3.8-slim-bullseye
 LABEL "com.dynamicguy.vendor"="Dynamic Guy"
-LABEL version="1.0.0"
+LABEL version="4.5.4"
 LABEL description="Latest and greatest \
 opencv and opencv_contrib built in one container."
 ARG APP_HOME=/app
@@ -27,7 +27,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR ${APP_HOME}
-ENV OPENCV_VERSION="4.5.3"
+ENV OPENCV_VERSION="4.5.4"
 RUN wget https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip \
 && unzip ${OPENCV_VERSION}.zip \
 && rm ${OPENCV_VERSION}.zip
@@ -60,10 +60,13 @@ RUN wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
   -D BUILD_opencv_apps=OFF \
   -D OPENCV_ENABLE_NONFREE=ON \
   -D CMAKE_BUILD_TYPE=Releases \
-  -D PYTHON_EXECUTABLE=$(which python3.9) \
-  -D PYTHON_INCLUDE_DIR=$(python3.9 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
-  -D PYTHON_PACKAGES_PATH=$(python3.9 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
+  -D PYTHON_EXECUTABLE=$(which python3.8) \
+  -D PYTHON_INCLUDE_DIR=$(python3.8 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
+  -D PYTHON_PACKAGES_PATH=$(python3.8 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
   .. \
 && make install \
-&& rm ${APP_HOME}/${OPENCV_VERSION}.zip \
-&& rm -r ${APP_HOME}/opencv-${OPENCV_VERSION}
+&& rm -rf ${APP_HOME}/${OPENCV_VERSION}.zip \
+&& rm -rf ${APP_HOME}/opencv-${OPENCV_VERSION} \
+&& rm -rf /var/lib/apt/lists/* \
+&& apt-get -qq autoremove \
+&& apt-get -qq clean
