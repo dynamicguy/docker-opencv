@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM python:3.8-slim-bullseye
 LABEL "com.dynamicguy.vendor"="Dynamic Guy"
-LABEL version="4.5.4"
+LABEL version="4.6.0"
 LABEL description="Latest and greatest \
 opencv and opencv_contrib built in one container."
 ARG APP_HOME=/app
@@ -27,7 +27,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR ${APP_HOME}
-ENV OPENCV_VERSION="4.5.4"
+ENV OPENCV_VERSION="4.6.0"
 RUN wget https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip \
 && unzip ${OPENCV_VERSION}.zip \
 && rm ${OPENCV_VERSION}.zip
@@ -50,7 +50,7 @@ RUN wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
   -D BUILD_opencv_legacy=OFF \
   -D BUILD_opencv_java=OFF \
   -D BUILD_opencv_python3=ON \
-  -D BUILD_opencv_js=OFF \       
+  -D BUILD_opencv_js=OFF \
   -D BUILD_opencv_ximgproc=ON \
   -D BUILD_opencv_xphoto=ON \
   -D BUILD_opencv_xfeatures2d=ON \
